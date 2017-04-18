@@ -55,13 +55,19 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
 	// Check division by zero
 	if (px == 0 && py == 0) {
-	    throw std::invalid_argument("CalculateJacobian - Error - Division by Zero");    
+//	    throw std::invalid_argument("CalculateJacobian - Error - Division by Zero");
+		Hj << px / sqrt(px*px + py*py + 1), py / sqrt(px*px + py*py + 1), 0, 0,
+				-py / (px*px + py*py + 1), px / (px*px + py*py + 1), 0, 0,
+				py * (vx * py - vy * px) / pow(sqrt(px*px + py*py + 1), 3), px * (vy * px - vx * py) / pow(sqrt(px*px + py*py + 1), 3), px / sqrt(px*px + py*py + 1), py / sqrt(px*px + py*py + 1);
 	}
 	
 	// Compute the Jacobian matrix
-    Hj << px / sqrt(px*px + py*py), py / sqrt(px*px + py*py), 0, 0,
-        -py / (px*px + py*py), px / (px*px + py*py), 0, 0,
-        py * (vx * py - vy * px) / pow(sqrt(px*px + py*py), 3), px * (vy * px - vx * py) / pow(sqrt(px*px + py*py), 3), px / sqrt(px*px + py*py), py / sqrt(px*px + py*py);
+	else {
+		Hj << px / sqrt(px*px + py*py), py / sqrt(px*px + py*py), 0, 0,
+				-py / (px*px + py*py), px / (px*px + py*py), 0, 0,
+				py * (vx * py - vy * px) / pow(sqrt(px*px + py*py), 3), px * (vy * px - vx * py) / pow(sqrt(px*px + py*py), 3), px / sqrt(px*px + py*py), py / sqrt(px*px + py*py);
+	}
+
     
 	return Hj;
 }
